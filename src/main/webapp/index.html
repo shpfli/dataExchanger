@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>平面文件数据交换</title>
+</head>
+<body>
+<form action="DataImport">
+	数据文件分隔符：<input type="text" name="separator" value="|" required/><br/>
+	导入文件目录：<input type="text" name="importDir" required/><br/>
+	导入表名：<input type="text" name="importTable" required/><br/>
+	<input type="submit" value="导入">
+</form>
+
+<form action="DataExport">
+	导出表名：<input type="text" name="exportTable" required/><br/>
+	导出表字段：<input type="text" name="exportTableColumns" required value="*"/>（以“,”分隔，*表示全部字段）<br/>
+	导出文件目录：<input type="text" name="exportDir" required/><br/>
+	数据文件分隔符：<input type="text" name="separator" value="|"/><br/>
+	限制数据文件大小：<input type="text" name="maxSize" value="1000"/>M<br/>
+	是否压缩：<input type="radio" name="doCompress" value="true" checked/>是
+	<input type="radio" name="doCompress" value="false"/>否<br/>
+	<input type="submit" value="导出">
+</form>
+</body>
+</html>
