@@ -5,8 +5,11 @@ package com.hubery.data.dao;
 
 import java.lang.Thread.State;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -54,7 +57,17 @@ public class DbImporter implements Runnable {
 				Map<String, Object> map = queue.poll(1, TimeUnit.SECONDS);
 				if (map != null) {
 					for (int j = 0; j < columns.length; j++) {
-						ps.setObject(j + 1, map.get(columns[j]));
+						// ps.setObject(j + 1, map.get(columns[j]));
+						Object val = map.get(columns[j]);
+						if (val instanceof Timestamp) {
+							ps.setTimestamp(j + 1, (Timestamp) val);
+						} else if (val instanceof Date) {
+							ps.setDate(j + 1, (Date) val);
+						} else if (val instanceof java.sql.Time) {
+							ps.setTime(j + 1, (Time) val);
+						} else {
+							ps.setObject(j + 1, val);
+						}
 					}
 					ps.addBatch();
 					if (++i % BATCH_SIZE == 0) {

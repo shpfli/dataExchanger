@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -48,7 +49,25 @@ public class DataQuery implements Runnable {
 				Map<String, Object> item = new HashMap<String, Object>();
 				for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
 					String name = resultSetMetaData.getColumnName(i);
-					Object val = result.getObject(i);
+					Object val = null;
+					int columnType = resultSetMetaData.getColumnType(i);// 类型
+
+					// 通过getTimestamp可以确定返回java.sql.Timestamp类型，避免因为数据库的原因返回形如oracle.sql.TIMESTAMP类型的对象
+					switch (columnType) {
+					case Types.TIMESTAMP:
+						val = result.getTimestamp(i);
+						break;
+					case Types.TIME:
+						val = result.getTime(i);
+						break;
+					case Types.DATE:
+						val = result.getDate(i);
+						break;
+					default:
+						val = result.getObject(i);
+						break;
+					}
+
 					item.put(name.toUpperCase(), val);
 				}
 				// 将数据加入队列
